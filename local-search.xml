@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+  
+  <entry>
+    <title>示例文章：测试 Giscus 评论系统</title>
+    <link href="/2025/03/10/chenge-first-blog/"/>
+    <url>/2025/03/10/chenge-first-blog/</url>
+    
+    <content type="html"><![CDATA[<p>欢迎来到这篇文章！这篇文章的目的是测试 Giscus 评论系统是否正确集成到你的网站中。如果你看到评论框，并且能够正常发表评论，那么恭喜你，一切设置都正确无误！</p><h2 id="文章内容"><a href="#文章内容" class="headerlink" title="文章内容"></a>文章内容</h2><p>这篇文章是一个简单的测试，用于验证 Giscus 评论系统是否正常工作。你可以在这里发表评论，提出问题，或者分享你的想法。</p><p>如果你在评论过程中遇到任何问题，请随时告诉我，我会尽力帮助你解决。</p><h2 id="评论区"><a href="#评论区" class="headerlink" title="评论区"></a>评论区</h2><p>请在下方留下你的评论，测试一下评论系统是否正常工作。感谢你的支持！</p><hr><script src="https://giscus.app/client.js"        data-repo="cyber-moshen/cyber-moshen.github.io"        data-repo-id="R_kgDOOFObZw"        data-category="Announcements"        data-category-id="DIC_kwDOOFObZ84Cnu52"        data-mapping="pathname"        data-strict="0"        data-reactions-enabled="1"        data-emit-metadata="0"        data-input-position="bottom"        data-theme="purple_dark"        data-lang="zh-CN"        crossorigin="anonymous"        async></script>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  
+</search>
