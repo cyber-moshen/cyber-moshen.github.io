@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>浮华轻语赋</title>
+    <link rel="icon" type="image/x-icon" href="qetuk-lx2kt-001.ico">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('img/jinzhou.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.582);
+            z-index: -1;
+        }
+
+        /* 轮播容器样式：设置最大宽度、居中显示和基础外观 */
+        .slider-container {
+            max-width: 1200px;
+            height: 670px;
+            margin: 30px auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        /* 轮播区域样式：修改为绝对定位 */
+        .slider {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            height: 670px;
+        }
+
+        /* 单个轮播项样式：使用绝对定位和透明度过渡 */
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        /* 轮播图片样式：保持图片比例并填充整个容器 */
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;  /* 添加圆角效果 */
+        }
+
+        /* 轮播按钮容器：居中对齐并设置相对位置 */
+        .slider-buttons {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+
+        /* 轮播按钮样式：半透明背景、方形外观和阴影效果 */
+        .slider-btn {
+            background: rgba(0, 119, 255, 0.7);
+            border: none;
+            padding: 15px 20px;
+            cursor: pointer;
+            font-size: 12px;
+            margin: 0 10px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }
+
+        .slider-btn:hover {
+            background: rgba(255,255,255,0.9);
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        /* 指示点容器：底部居中布局 */
+        .dots {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* 指示点样式：圆点外观和动画效果 */
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        /* 激活状态的指示点样式 */
+        .dot.active {
+            background: #fff;
+            transform: scale(1.2);
+        }
+
+        /* 修改：跳转按钮容器样式 */
+        .jump-button-container {
+            text-align: center;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        /* 修改：基础跳转按钮样式 */
+        .jump-button {
+            padding: 15px 30px;
+            font-size: 18px;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* 新增：蓝色按钮样式 */
+        .jump-button.blue {
+            background: linear-gradient(45deg, #2196F3, #00BCD4);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+        .jump-button.blue:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+            background: linear-gradient(45deg, #1976D2, #0097A7);
+        }
+
+        /* 新增：紫色按钮样式 */
+        .jump-button.purple {
+            background: linear-gradient(45deg, #9C27B0, #E91E63);
+            box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
+        }
+        .jump-button.purple:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(156, 39, 176, 0.4);
+            background: linear-gradient(45deg, #7B1FA2, #C2185B);
+        }
+
+        /* 修改：把绿色按钮改为橘色 */
+        .jump-button.green {
+            background: linear-gradient(45deg, #FF9800, #FF5722);
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+        }
+        .jump-button.green:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+            background: linear-gradient(45deg, #F57C00, #E64A19);
+        }
+
+        /* 分隔线样式 */
+        .divider {
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #666, transparent);
+            margin: 40px auto;
+        }
+
+        /* 角色展示区域标题 */
+        .character-title {
+            text-align: center;
+            font-size: 2em;
+            color: #333;
+            margin: 30px 0;
+        }
+
+        /* 角色卡片容器 */
+        .character-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 角色卡片样式 */
+        .character-card {
+            width: 250px;
+            height: 350px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            background-color: #f1f1f1; /* 默认灰色背景 */
+        }
+
+        .character-card:hover {
+            background-color: #f799a9; /* 悬浮时的浅粉色背景 */
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        /* 添加角色介绍文本容器样式 */
+        .character-text {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .character-card:hover .character-text {
+            transform: translateY(0);
+        }
+
+        .character-text h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.2em;
+        }
+
+        .character-text p {
+            margin: 0;
+            font-size: 0.9em;
+            min-height: 3em;
+        }
+
+        /* 新版本信息样式 */
+        .version-info {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .version-title {
+            text-align: center;
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .version-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .version-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .version-item h3 {
+            color: #3498db;
+            margin: 0 0 10px 0;
+        }
+
+        .version-item p {
+            color: #666;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* 联系作者按钮样式 */
+        .contact-author {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            padding: 15px 25px;
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-author:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+            background: linear-gradient(45deg, #FF5252, #FF7043);
+        }
+
+        .contact-author svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* 游戏简介样式 */
+        .game-intro {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .game-intro p {
+            font-size: 18px;
+            line-height: 1.8;
+            margin: 0;
+            text-align: justify;
+            text-indent: 2em;
+            background: linear-gradient(45deg, #ab55f1, #3474ff, #2980b9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: text-gradient 8s ease infinite;
+        }
+
+        @keyframes text-gradient {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        /* Logo样式 */
+        .fixed-logo {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 100px;
+            height: 100px;
+            z-index: 1000;
+        }
+
+        .fixed-logo:hover {
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- 添加固定Logo -->
+    <img src="img/ttt.png" alt="Logo" class="fixed-logo">
+
+    <div class="slider-container">
+        <div class="slider">
+            <div class="slide active">
+                <img src="img/yanshi1.png" alt="幻灯片1">
+            </div>
+            <div class="slide">
+                <img src="img/yanshi2.png" alt="幻灯片2">
+            </div>
+            <div class="slide">
+                <img src="img/yanshi3.png" alt="幻灯片3">
+            </div>
+        </div>
+        <div class="slider-buttons">
+            <button class="slider-btn prev">❮</button>
+            <button class="slider-btn next">❯</button>
+        </div>
+        <div class="dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    </div>
+    
+    <!-- 游戏简介 -->
+    <div class="game-intro">
+        <h2 class="character-title">游戏简介</h2>
+        <p style="font-weight: bold;">《浮华轻语赋》是一款AI——3D角色扮演同人游戏，基于llm进行ai聊天和互动，玩家可以与游戏中的角色进行深度交流。游戏引入Function Calling调用游戏内参数，使用多模态模型使AI具有视觉、听觉。使用虚幻引擎开发，充分发挥虚幻引擎的渲染性能，同时游戏有高度自定义功能，可以自行添加角色，添加语音音色，为玩家带来沉浸式的游戏体验。</p>
+        </p>
+    </div>
+    
+    <!-- 修改：跳转按钮容器 -->
+    <div class="jump-button-container">
+        <button class="jump-button blue" onclick="window.location.href='https://github.com/cyber-moshen/Whispers-of-Ephemera'">下载msix</button>
+        <button class="jump-button purple" onclick="window.location.href='https://github.com/cyber-moshen/Whispers-of-Ephemera'">下载apk</button>
+        <button class="jump-button green" onclick="window.location.href='https://github.com/cyber-moshen/Whispers-of-Ephemera'">下载zip</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 新增版本信息部分 -->
+    <div class="version-info">
+        <h2 class="version-title">测试新版本即将上线！</h2>
+        <div class="version-content">
+            <div class="version-item">
+                <h3>版本号: v1.1.0</h3>
+                <p>发布日期: 2024-04-19</p>
+                <p>更新内容:</p>
+                <p>- 加入动态多人格</p>
+                <p>- 修复已知问题</p>
+            </div>
+            <div class="version-item">
+                <h3>系统要求</h3>
+                <p>- Windows 11 </p>
+                <p>- Android 10.0 及以上</p>
+                <p>- 内存: 6GB 及以上</p>
+            </div>
+            <div class="version-item">
+                <h3>即将更新</h3>
+                <p>- 新增角色模型</p>
+                <p>- 支持长期记忆</p>
+                <p>- 添加场景交互</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+    <h2 class="character-title">角色介绍</h2>
+    
+    <div class="character-container">
+        <div class="character-card">
+            <img src="img/changli.png" alt="角色1">
+            <div class="character-text">
+                <h3>长离</h3>
+                <p></p>
+            </div>
+        </div>
+        <div class="character-card">
+            <img src="img/shouanren.png" alt="角色2">
+            <div class="character-text">
+                <h3>卡提希娅</h3>
+                <p></p>
+            </div>
+        </div>
+        <div class="character-card">
+            <img src="img/chun.png" alt="角色3">
+            <div class="character-text">
+                <h3>椿</h3>
+                <p></p>
+            </div>
+        </div>
+        <div class="character-card">
+            <img src="img/kakaluo.png" alt="角色4">
+            <div class="character-text">
+                <h3>卡卡罗</h3>
+                <p></p>
+            </div>
+        </div>
+    </div>
+
+    <button class="contact-author" onclick="window.location.href='https://github.com/cyber-moshen'">
+        <svg viewBox="0 0 24 24">
+            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/>
+        </svg>
+        联系作者
+    </button>
+
+    <script>
+        // 获取DOM元素
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        const prevBtn = document.querySelector('.prev');
+        const nextBtn = document.querySelector('.next');
+        
+        let currentSlide = 0;
+        const slidesCount = slides.length;
+
+        // 更新轮播图显示状态
+        function updateSlider() {
+            // 移除所有活动状态
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            // 添加当前活动状态
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+
+        // 切换到下一张图片
+        function nextSlide() {
+            // 使用取模运算实现循环切换
+            currentSlide = (currentSlide + 1) % slidesCount;
+            updateSlider();
+        }
+
+        // 切换到上一张图片
+        function prevSlide() {
+            // 处理负数索引的情况
+            currentSlide = (currentSlide - 1 + slidesCount) % slidesCount;
+            updateSlider();
+        }
+
+        // 绑定点击事件
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+        
+        // 为每个指示点添加点击事件
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentSlide = index;
+                updateSlider();
+            });
+        });
+
+        // 设置自动轮播，每5秒切换一次
+        setInterval(nextSlide,5000);
+
+        // 角色介绍文本
+        const characterDescriptions = {
+            '长离': '今州令尹参事，前明庭中政省长史，拥有丹煌离火的异能力。',
+            '卡提希娅': '原名芙露德莉斯，来自黎那汐塔的岁主共鸣者。',
+            '椿': '黑海岸的执花，自由洒脱，外表温柔却内心危险，言语中偶尔流露出病娇的气息。',
+            '卡卡罗': '卡卡罗，一位从灾民到传奇佣兵团团长的崛起者。在战斗中果断且无情，展现出强大的领袖气质。',
+        };
+
+        // 打字机效果函数
+        function typeWriter(element, text, speed = 50) {
+            let timer;
+            let i = 0;
+            element.textContent = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    timer = setTimeout(type, speed);
+                }
+            }
+            
+            type();
+            return () => {
+                clearTimeout(timer);  // 返回清除定时器的函数
+            };
+        }
+
+        // 为每个角色卡片添加鼠标悬停事件
+        document.querySelectorAll('.character-card').forEach(card => {
+            const name = card.querySelector('h3').textContent;
+            const textElement = card.querySelector('p');
+            let isTyping = false;
+            let stopTyping = null;
+
+            card.addEventListener('mouseenter', () => {
+                if (stopTyping) {
+                    stopTyping();  // 如果存在之前的打字效果，清除它
+                }
+                isTyping = true;
+                stopTyping = typeWriter(textElement, characterDescriptions[name], 50);
+            });
+
+            card.addEventListener('mouseleave', () => {
+                if (stopTyping) {
+                    stopTyping();  // 清除打字效果
+                }
+                isTyping = false;
+                textElement.textContent = '';
+            });
+        });
+    </script>
+</body>
+</html>
